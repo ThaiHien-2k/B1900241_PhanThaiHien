@@ -1,0 +1,28 @@
+const { response } = require("../app");
+
+class BadRequestError extends Error{
+    constructor(statusCode, message){
+        super();
+        this.statusCode = statusCode;
+        this.message = message;
+    }
+}
+
+class ErrorHandler {
+    constructor() {
+        this.handleError = (error, responseStream = null) => {
+            if (responseStream){
+                responseStream.status(error.statusCode || 500).json({
+                    message: error.message || "internal server error",
+                });
+            } else {
+                console.log(error);
+            }
+        };
+    }
+}
+
+module.exports = {
+    BadRequestError,
+    errorHandler: new ErrorHandler(),
+};
